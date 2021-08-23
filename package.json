@@ -1,0 +1,19 @@
+{
+  "name": "yelpcamp",
+  "version": "1.0.0",
+  "description": "A web app to track and review campsites.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevrez/yelpcamp.git"
+  },
+  "author": "Kevin Reznicek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kevrez/yelpcamp/issues"
+  },
+  "homepage": "https://github.com/kevrez/yelpcamp#readme"
+}
