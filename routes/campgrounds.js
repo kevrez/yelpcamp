@@ -1,3 +1,4 @@
+// /campground routes
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const ExpressError = require("../utils/ExpressError");
@@ -34,6 +35,10 @@ router.get(
     const campground = await Campground.findById(req.params.id).populate(
       "reviews"
     );
+    if (!campground) {
+      req.flash("error", "Can't find that campground.");
+      res.redirect("/campgrounds");
+    }
     res.render("campgrounds/show.ejs", { campground });
   })
 );
@@ -55,6 +60,7 @@ router.post(
     // }
     const campground = new Campground(req.body.campground);
     await campground.save();
+    req.flash("success", "Successfully made a new campground.");
     res.redirect(`campgrounds/${campground._id}`);
   })
 );
@@ -69,6 +75,11 @@ router.put(
       { ...req.body.campground },
       { new: true }
     );
+    if (!campground) {
+      req.flash("error", "Can't find that campground.");
+      res.redirect("/campgrounds");
+    }
+    req.flash("success", "Successfully updated campground.");
     res.redirect(`/campgrounds/${campground._id}`);
   })
 );
