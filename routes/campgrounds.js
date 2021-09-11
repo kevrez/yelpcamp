@@ -1,4 +1,6 @@
 // /campground routes
+"use strict";
+
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const ExpressError = require("../utils/ExpressError");
