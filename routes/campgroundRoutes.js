@@ -9,7 +9,7 @@ const catchAsync = require("../utils/catchAsync");
 const Campground = require("../models/campground");
 const { campgroundSchema } = require("../schemas/schemas.js");
 
-const { isLoggedIn } = require("../../middleware.js");
+const { isLoggedIn } = require("../middleware.js");
 
 const validateCampground = (req, res, next) => {
   const { error } = campgroundSchema.validate(req.body);
