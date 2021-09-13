@@ -2,7 +2,7 @@
 
 const Campground = require("../models/campground");
 
-module.exports.index = (req, res) => {
+module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
   res.render("campgrounds/index.ejs", { campgrounds });
 };
