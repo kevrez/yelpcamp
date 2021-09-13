@@ -9,20 +9,21 @@ const catchAsync = require("../utils/catchAsync");
 
 const controller = require("../controllers/usersController");
 
-router.get("/register", controller.renderRegister);
+router
+  .route("/register")
+  .get(controller.renderRegister)
+  .post(catchAsync(controller.register));
 
-router.post("/register", catchAsync(controller.register));
-
-router.get("/login", controller.renderLogin);
-
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    failureFlash: true,
-    failureRedirect: "/login",
-  }),
-  controller.login
-);
+router
+  .route("/login")
+  .get(controller.renderLogin)
+  .post(
+    passport.authenticate("local", {
+      failureFlash: true,
+      failureRedirect: "/login",
+    }),
+    controller.login
+  );
 
 router.get("/logout", controller.logout);
 
