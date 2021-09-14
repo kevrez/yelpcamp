@@ -1,5 +1,9 @@
 "use strict";
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
@@ -62,7 +66,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
-  console.log(req.session);
+  // console.log(req.session);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
