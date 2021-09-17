@@ -1,7 +1,13 @@
+<!-- NOTE: This file must be saved without formatting by Prettier!
+      Saving with formatting will break the const campground that
+      gets sent to ShowPageMap.js -->
+
 <% layout('layouts/boilerplate') %>
   <link rel="stylesheet" href="/styles/stars.css">
   <div class="row">
     <div class="col-md-6 offset-md-1">
+
+      <div id='map' style='width: 400px; height: 300px;'></div>
 
       <div id="campgroundCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
@@ -119,3 +125,8 @@
             <% } %>
     </div>
   </div>
+  <script>
+    const campground = <%- JSON.stringify(campground);%>
+    const mapToken = "<%- process.env.MAPBOX_TOKEN %>";
+  </script>
+  <script src="/javascripts/showPageMap.js"></script>
