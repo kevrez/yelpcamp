@@ -26,6 +26,8 @@ mongoose
 
 const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
+// Request latitude and longitude from MapBox
+// if not available from cities list
 const getGeoData = async (geoQuery) => {
   const geoData = await geocodingClient
     .forwardGeocode({
@@ -38,16 +40,19 @@ const getGeoData = async (geoQuery) => {
 
 const seedDB = async () => {
   await Campground.deleteMany({});
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 200; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 20) + 10;
-    const location = `${cities[random1000].city}, ${cities[random1000].state}`;
-    const geometry = await getGeoData(location);
+    const randomLocation = cities[random1000];
+    const location = `${randomLocation.city}, ${randomLocation.state}`;
 
     const c = new Campground({
       title: `${sample(descriptors)} ${sample(places)}`,
       location: location,
-      geometry: geometry,
+      geometry: {
+        type: "Point",
+        coordinates: [randomLocation.longitude, randomLocation.latitude],
+      },
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad quam ducimus nobis consequuntur, tempore, pariatur iusto sit qui, omnis eligendi corporis praesentium! Non maiores laborum magni inventore nihil obcaecati earum!",
       price,
