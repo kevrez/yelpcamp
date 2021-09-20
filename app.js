@@ -78,8 +78,7 @@ app.use("/campgrounds/:id/reviews", reviewRoutes);
 app.use("/", userRoutes);
 
 app.get("/", (req, res) => {
-  res.redirect("/campgrounds"); // Temporary until homepage is built
-  // res.render("home.ejs");
+  res.render("home.ejs");
 });
 
 app.all("*", (req, res, next) => {
