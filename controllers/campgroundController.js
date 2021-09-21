@@ -27,7 +27,6 @@ const getCoordinatesFromQuery = async (query) => {
       limit: 1,
     })
     .send();
-  console.log(geoData);
   return geoData.body.features[0].geometry;
 };
 
