@@ -20,15 +20,22 @@ module.exports.renderNewForm = (req, res) => {
   }
 };
 
-module.exports.createCampground = async (req, res, next) => {
+const getCoordinatesFromQuery = async (query) => {
   const geoData = await geocodingClient
     .forwardGeocode({
-      query: req.body.campground.location,
+      query,
       limit: 1,
     })
     .send();
+  console.log(geoData);
+  return geoData.body.features[0].geometry;
+};
+
+module.exports.createCampground = async (req, res, next) => {
   const campground = new Campground(req.body.campground);
-  campground.geometry = geoData.body.features[0].geometry;
+  campground.geometry = await getCoordinatesFromQuery(
+    req.body.campground.location
+  );
   campground.images = req.files.map((f) => {
     return { url: f.path, filename: f.filename };
   });
@@ -83,6 +90,10 @@ module.exports.updateCampground = async (req, res) => {
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
   }
+
+  campground.geometry = await getCoordinatesFromQuery(
+    req.body.campground.location
+  );
 
   await campground.save();
   req.flash("success", "Successfully updated campground.");
