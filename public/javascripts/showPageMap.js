@@ -1,6 +1,5 @@
 "use strict";
 
-console.log(campground);
 mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
   container: "map",
