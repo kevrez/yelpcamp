@@ -86,6 +86,7 @@ const scriptSrcUrls = [
   "https://kit.fontawesome.com/",
   "https://cdnjs.cloudflare.com/",
   "https://cdn.jsdelivr.net",
+  "https://intense-springs-95269.herokuapp.com",
 ];
 const styleSrcUrls = [
   "https://kit-free.fontawesome.com/",
