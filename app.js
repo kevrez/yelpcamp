@@ -123,7 +123,7 @@ app.use(
         "https://images.unsplash.com/",
       ],
       fontSrc: ["'self'", ...fontSrcUrls],
-      childSrc: ["'self,", "blob:"],
+      childSrc: ["'self'", "blob:"],
     },
   })
 );
