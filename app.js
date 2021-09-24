@@ -33,11 +33,6 @@ const CSP = require("./security/contentSecurityPolicy");
 
 const app = express();
 
-// Express setup
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
-
 // Database setup
 mongoose
   .connect(dbURL, {
@@ -64,18 +59,21 @@ const store = MongoStore.create({
   touchAfter: 24 * 3600, // seconds
 });
 
+// Page rendering setup
+app.engine("ejs", ejsMate);
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Express setup
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
+
 store.on("error", function (e) {
   console.log("Session store error:", e);
 });
 
-// Session setup
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
+// Session & auth setup
 const sessionConfig = {
   store,
   name: "Session",
@@ -89,13 +87,21 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
-app.use(session(sessionConfig));
 
-// Page rendering setup
-app.engine("ejs", ejsMate);
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.use(session(sessionConfig));
 app.use(flash());
+
+// Auth setup
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Security setup
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet.contentSecurityPolicy(CSP));
+
 // Flash messages middleware setup
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
@@ -103,10 +109,6 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   next();
 });
-
-// Security setup
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(helmet.contentSecurityPolicy(CSP));
 
 // Route controllers
 app.use("/campgrounds", campgroundRoutes);
@@ -134,6 +136,7 @@ app.use((err, req, res, next) => {
 
 // Express listener
 const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
   console.log(`Serving on port ${port}`);
 });
