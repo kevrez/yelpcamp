@@ -68,12 +68,6 @@ store.on("error", function (e) {
   console.log("Session store error:", e);
 });
 
-// Page rendering setup
-app.engine("ejs", ejsMate);
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(flash());
-
 // Session setup
 app.use(passport.initialize());
 app.use(passport.session());
@@ -97,10 +91,11 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 
-// Security setup
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(helmet.contentSecurityPolicy(CSP));
-
+// Page rendering setup
+app.engine("ejs", ejsMate);
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(flash());
 // Flash messages middleware setup
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
@@ -108,6 +103,10 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   next();
 });
+
+// Security setup
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet.contentSecurityPolicy(CSP));
 
 // Route controllers
 app.use("/campgrounds", campgroundRoutes);
